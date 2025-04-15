@@ -1,0 +1,34 @@
+name: PHP Syntax & Phan Analysis
+
+on:
+  push:
+    branches:
+      - main
+      - deploy/**
+
+jobs:
+  phan-analysis:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+
+    - name: Syntax check (php -l)
+      run: |
+        echo "Checking PHP syntax..."
+        find . -type f -name "*.php" -print0 | xargs -0 -n1 php -l
+
+    - name: Install Phan
+      run: |
+        wget https://github.com/phan/phan/releases/latest/download/phan.phar
+        chmod +x phan.phar
+
+    - name: Run Phan
+      run: |
+        ./phan.phar
