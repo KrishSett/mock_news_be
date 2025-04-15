@@ -43,5 +43,15 @@ services:
     depends_on:
       - mysql
 
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: ngrok
+    restart: unless-stopped
+    command: ["http", "php-apache:80"]
+    environment:
+      NGROK_AUTHTOKEN: ${NGROK_AUTH_TOKEN}
+    depends_on:
+      - php-apache
+
 volumes:
   mysql_data:
